@@ -1,8 +1,4 @@
-if (process.env.NODE_ENV !== 'production') {
-  const dotenv = require('dotenv')
-  dotenv.config()
-}
-
+require('dotenv').config()
 export default {
   /*
    ** Nuxt rendering mode
@@ -14,7 +10,12 @@ export default {
    ** See https://nuxtjs.org/api/configuration-target
    */
   target: 'static',
+
   loading: false,
+
+  generate: {
+    fallback: true,
+  },
   /*
    ** Headers of the page
    ** See https://nuxtjs.org/api/configuration-head
@@ -94,7 +95,7 @@ export default {
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
-    '@nuxtjs/dotenv',
+    ['@nuxtjs/dotenv', { systemvars: true }],
   ],
   /*
    ** Nuxt.js modules

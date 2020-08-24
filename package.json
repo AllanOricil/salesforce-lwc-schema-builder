@@ -11,9 +11,9 @@
   },
   "scripts": {
     "dev": "nuxt",
-    "build": "nuxt build",
+    "build": "cross-env SALESFORCE_SERVICE_API=https://lit-woodland-26437.herokuapp.com SALESFORCE_API_VERSION=48.0 SALESFORCE_CLIENT_ID=3MVG9wEVwV0C9ejBn9DRxxqmoBQXhNtiWh3XndwUCv6mVzBnaSmpaAVWa9QPf61OnYtsXsMafBAbeTYV.yXJI SALESFORCE_SCOPES=full SALESFORCE_ENV=https://login.salesforce.com REDIRECT_CALLBACK=https://lit-woodland-26437.herokuapp.com/api/oauth2/callback nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate",
+    "generate": "cross-env SALESFORCE_SERVICE_API=https://lit-woodland-26437.herokuapp.com SALESFORCE_API_VERSION=48.0 SALESFORCE_CLIENT_ID=3MVG9wEVwV0C9ejBn9DRxxqmoBQXhNtiWh3XndwUCv6mVzBnaSmpaAVWa9QPf61OnYtsXsMafBAbeTYV.yXJI SALESFORCE_SCOPES=full SALESFORCE_ENV=https://login.salesforce.com REDIRECT_CALLBACK=https://lit-woodland-26437.herokuapp.com/api/oauth2/callback nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint",

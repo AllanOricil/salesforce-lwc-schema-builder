@@ -131,7 +131,6 @@ import SobjectView from '../components/sobject-view'
 import SobjectForm from '../components/sobject-form'
 
 export default {
-  middleware: ['auth'],
   components: {
     SchemaBuilder,
     ElementList,
