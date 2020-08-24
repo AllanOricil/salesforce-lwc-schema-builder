@@ -2,6 +2,13 @@
   "name": "salesforce-lwc-schema-builder",
   "version": "1.0.0",
   "private": true,
+  "main": "main.js",
+  "build": {
+    "appId": "{{ appId }}",
+    "directories": {
+      "buildResources": "static"
+    }
+  },
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
@@ -9,14 +16,16 @@
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
-    "precommit": "npm run lint"
+    "precommit": "npm run lint",
+    "delectron": "cross-env NODE_ENV=DEV electron .",
+    "belectron": "nuxt build && electron-builder"
   },
   "dependencies": {
-    "@allanoricil/schema-builder": "^0.15.5-dev2",
-    "@allanoricil/vuetning": "0.0.51",
+    "@allanoricil/schema-builder": "^0.16.14",
+    "@allanoricil/vuetning": "0.0.64",
     "@nuxtjs/axios": "^5.12.0",
     "@nuxtjs/proxy": "^2.0.1",
-    "@nuxtjs/pwa": "^3.0.0-beta.20",
+    "@nuxtjs/pwa": "^3.0.1",
     "@salesforce-ux/design-system": "^2.12.2",
     "bootstrap": "^4.5.0",
     "bootstrap-vue": "^2.15.0",
@@ -31,6 +40,7 @@
     "@nuxtjs/eslint-config": "^3.1.0",
     "@nuxtjs/eslint-module": "^2.0.0",
     "babel-eslint": "^10.1.0",
+    "cross-env": "^7.0.2",
     "eslint": "^7.5.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-nuxt": "^1.0.0",

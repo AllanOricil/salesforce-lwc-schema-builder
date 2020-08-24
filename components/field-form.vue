@@ -6,6 +6,7 @@
   >
     <!--style="max-height: none; height: calc(100vh - 120px); overflow-y: auto;"-->
     <slds-combobox
+      v-if="false"
       id="sobject-field-type"
       v-model="fieldTypeInput"
       :options="[
@@ -39,129 +40,154 @@
     <auto-number-form
       v-if="fieldTypeInput === 'AutoNumber'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
+      @fieldchange="onFieldChange"
     />
     <checkbox-form
       v-else-if="fieldTypeInput === 'Checkbox'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <currency-form
       v-else-if="fieldTypeInput === 'Currency'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <date-form
       v-else-if="fieldTypeInput === 'Date'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <date-time-form
       v-else-if="fieldTypeInput === 'DateTime'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <email-form
       v-else-if="fieldTypeInput === 'Email'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <formula-form
       v-else-if="fieldTypeInput === 'Formula'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <geolocation-form
       v-else-if="fieldTypeInput === 'Location'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <hierarchy-form
       v-else-if="fieldTypeInput === 'Hierarchy'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <long-text-area-form
       v-else-if="fieldTypeInput === 'LongTextArea'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <lookup-form
       v-else-if="fieldTypeInput === 'Lookup'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <master-detail-form
       v-else-if="fieldTypeInput === 'MasterDetail'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <number-form
       v-else-if="fieldTypeInput === 'Number'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <percent-form
       v-else-if="fieldTypeInput === 'Percent'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <phone-form
       v-else-if="fieldTypeInput === 'Phone'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <picklist-form
       v-else-if="fieldTypeInput === 'Picklist'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <multi-select-picklist-form
       v-else-if="fieldTypeInput === 'MultiselectPicklist'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <rich-text-area-form
       v-else-if="fieldTypeInput === 'Html'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <rollup-summary-form
       v-else-if="fieldTypeInput === 'RollupSummary'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <text-area-form
       v-else-if="fieldTypeInput === 'TextArea'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <text-encrypted-form
       v-else-if="fieldTypeInput === 'EncryptedText'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <text-form
       v-else-if="fieldTypeInput === 'Text'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <time-form
       v-else-if="fieldTypeInput === 'Time'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
     <url-form
       v-else-if="fieldTypeInput === 'Url'"
       ref="form"
-      v-model="fieldInput"
+      :field="fieldInput"
+      :readonly="viewModeInput"
     />
 
     <slds-button
       brand
-      label="Save"
+      :label="submitButtonName"
       class="mt-3"
-      @click="onClickSave"
+      @click="onClickSubmit"
     ></slds-button>
   </form>
 </template>
@@ -219,38 +245,72 @@ export default {
     TimeForm,
     UrlForm,
   },
-  model: {
-    prop: 'field',
-  },
   props: {
     field: {
       type: Object,
-      default: () => {},
+      default: () => {
+        return {}
+      },
     },
     fieldType: {
       type: String,
       default: undefined,
     },
+    view: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       fieldTypeInput: this.fieldType,
-      fieldInput: this.field,
+      fieldInput: {},
+      viewModeInput: this.view,
     }
   },
+  computed: {
+    submitButtonName() {
+      if (this.viewModeInput) {
+        return 'Edit'
+      } else if (this.field && Object.keys(this.field).length) {
+        return 'Update'
+      } else {
+        return 'Create'
+      }
+    },
+  },
   watch: {
+    field(newValue) {
+      this.fieldInput = { ...newValue }
+    },
     fieldType(newValue) {
       this.fieldTypeInput = newValue
+      this.fieldInput = {}
+    },
+    view(newValue) {
+      this.viewModeInput = newValue
     },
   },
   methods: {
-    onClickSave() {
-      this.$refs.form.$v.$touch()
-      if (this.$refs.form.$v.$invalid) {
-        console.log('ERROR')
+    onClickSubmit() {
+      if (this.viewModeInput) {
+        this.viewModeInput = false
+        this.$emit('editField', this.fieldInput)
       } else {
-        this.$emit('newfield', this.fieldInput)
+        this.$refs.form.$v.$touch()
+        if (this.$refs.form.$v.$invalid) {
+          console.log('ERROR')
+        } else {
+          this.viewModeInput = true
+          this.$emit(
+            this.field.name ? 'updateField' : 'newField',
+            this.fieldInput
+          )
+        }
       }
+    },
+    onFieldChange(field) {
+      this.fieldInput = field
     },
   },
 }

@@ -2,19 +2,19 @@
   <div
     id="sobject-view"
     ref="sobject-view"
-    class="d-flex flex-column slds-form px-3"
-    style="max-height: none; height: calc(100vh - 120px); overflow-y: auto;"
+    class="d-flex flex-column slds-form px-3 pb-1"
+    style="max-height: none; height: calc(100vh - 90px); overflow-y: auto;"
   >
     <slds-input
       id="sobject-label"
-      v-model="sobject.label"
+      :value="sobject.label"
       label="Label"
       type="text"
       readonly
     />
     <slds-input
       id="sobject-plural-label"
-      v-model="sobject.pluralLabel"
+      :value="sobject.pluralLabel"
       label="Plural Label"
       type="text"
       readonly
@@ -22,34 +22,34 @@
     <slds-input
       v-if="sobject.gender"
       id="sobject-gender"
-      v-model="sobject.gender"
+      :value="sobject.gender"
       label="Gender"
       readonly
     />
     <slds-text-area
       id="sobject-description"
-      v-model="sobject.description"
+      :value="sobject.description"
       label="Description"
       rows="3"
       readonly
     />
     <slds-input
       id="sobject-object-name"
-      v-model="sobject.objectName"
-      label="Object Name"
+      :value="apiName"
+      label="API Name"
       type="text"
       readonly
     />
     <slds-input
       id="sobject-record-name"
-      v-model="sobject.recordName"
+      :value="sobject.recordName"
       label="Record Name"
       type="text"
       readonly
     />
     <slds-input
       id="sobject-data-type"
-      v-model="sobject.dataType"
+      :value="sobject.dataType"
       label="Data Type"
       placeholder="Select an Option"
       readonly
@@ -57,7 +57,7 @@
     <slds-input
       v-if="sobject.dataType === 'AutoNumber'"
       id="sobject-display-format"
-      v-model="sobject.displayFormat"
+      :value="sobject.displayFormat"
       label="Display Format"
       type="text"
       readonly
@@ -65,7 +65,7 @@
     <slds-input
       v-if="sobject.dataType === 'AutoNumber'"
       id="sobject-starting-number"
-      v-model="sobject.startingNumber"
+      :value="sobject.startingNumber"
       class="mb-2"
       label="Starting Number"
       type="number"
@@ -73,63 +73,63 @@
     />
     <slds-checkbox
       id="sobject-allow-reports"
-      v-model="sobject.enableReports"
+      :checked="sobject.enableReports"
       label="Allow Reports"
       variant="inline"
-      read-only
+      readonly
     />
     <slds-checkbox
       id="sobject-allow-activites"
-      v-model="sobject.enableActivities"
+      :checked="sobject.enableActivities"
       label="Allow Activities"
       variant="inline"
-      read-only
+      readonly
     />
     <slds-checkbox
       id="sobject-enable-history"
-      v-model="sobject.enableHistory"
+      :checked="sobject.enableHistory"
       label="Track Field History"
       variant="inline"
-      read-only
+      readonly
     />
     <slds-checkbox
       id="sobject-allow-in-chatter-groups"
-      v-model="sobject.allowInChatterGroups"
+      :checked="sobject.allowInChatterGroups"
       label="Allow in Chatter Groups"
       variant="inline"
-      read-only
+      readonly
     />
     <slds-checkbox
       id="sobject-allow-sharing"
-      v-model="sobject.enableSharing"
+      :checked="sobject.enableSharing"
       label="Allow Sharing"
       variant="inline"
-      read-only
+      readonly
     />
     <slds-checkbox
       id="sobject-enable-bulk-api"
-      v-model="sobject.enableBulkApi"
+      :checked="sobject.enableBulkApi"
       label="Allow Bulk API Access"
       variant="inline"
-      read-only
+      readonly
     />
     <slds-checkbox
       id="sobject-enable-streaming-api"
-      v-model="sobject.enableStreamingApi"
+      :checked="sobject.enableStreamingApi"
       label="Allow Streaming API Access"
       variant="inline"
-      read-only
+      readonly
     />
     <slds-checkbox
       id="sobject-enable-search"
-      v-model="sobject.enableSearch"
+      :checked="sobject.enableSearch"
       label="Allow Search"
       variant="inline"
-      read-only
+      readonly
     />
     <slds-input
       id="sobject-deployment-status"
-      v-model="sobject.deploymentStatus"
+      :value="sobject.deploymentStatus"
       label="Deployment Status"
       placeholder="Select an Option"
       readonly
@@ -143,12 +143,39 @@ export default {
   props: {
     sobject: {
       type: Object,
-      default: () => {},
+      default: () => {
+        return {
+          name: undefined,
+          label: undefined,
+          objectName: undefined,
+          description: undefined,
+          pluralLabel: undefined,
+          gender: undefined,
+          recordName: undefined,
+          dataType: 'Text',
+          displayFormat: undefined,
+          startingNumber: undefined,
+          enableReports: false,
+          enableActivities: false,
+          enableHistory: false,
+          allowInChatterGroups: false,
+          enableSharing: false,
+          enableBulkApi: false,
+          enableStreamingApi: false,
+          enableSearch: false,
+          deploymentStatus: 'Deployed',
+        }
+      },
+    },
+  },
+  computed: {
+    apiName() {
+      return this.sobject.objectName + '__c'
     },
   },
   methods: {
     onEdit() {
-      this.$emit('edit')
+      this.$emit('edit', this.sobject)
     },
   },
 }

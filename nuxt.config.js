@@ -113,6 +113,21 @@ export default {
     ],
   ],
 
+  pwa: {
+    manifest: {
+      short_name: 'LSB',
+      name: 'Lightning Schema Builder',
+      description: 'Create Salesforce Objects with a better User Experience.',
+      start_url: '/builder',
+      theme_color: '#202124',
+      background_color: '#202124',
+      display: 'standalone',
+    },
+    icons: {
+      purpose: ['maskable', 'any'],
+    },
+  },
+
   auth: {
     strategies: {
       auth0: {
@@ -130,7 +145,7 @@ export default {
   },
 
   proxy: {
-    '/api/': 'https://enigmatic-thicket-49997.herokuapp.com',
+    '/api/': process.env.SALESFORCE_SERVICE_API,
   },
 
   /*

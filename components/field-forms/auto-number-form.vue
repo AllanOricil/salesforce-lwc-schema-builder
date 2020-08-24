@@ -4,8 +4,9 @@
       id="field-label"
       v-model="fieldInput.label"
       label="Label"
-      required
       :error="$v.fieldInput.label.$error"
+      :required="!readonly"
+      :readonly="readonly"
     >
       <template v-slot:error>
         <p v-if="!$v.fieldInput.label.required">Label is Required</p>
@@ -18,10 +19,11 @@
       id="field-name"
       v-model="fieldInput.name"
       label="Name"
-      required
       max-length="80"
       pattern="^(?!.*__)(?!.*_$)[A-Za-z]\w*$"
       :error="$v.fieldInput.name.$error"
+      :required="!readonly"
+      :readonly="readonly"
     >
       <template v-slot:error>
         <p v-if="!$v.fieldInput.name.required">Name is Required</p>
@@ -40,13 +42,15 @@
       id="field-description"
       v-model="fieldInput.description"
       label="Description"
+      :readonly="readonly"
     ></slds-input>
     <slds-input
       id="field-help-text"
       v-model="fieldInput.helpText"
       label="Help Text"
+      :readonly="readonly"
     >
-      <template v-slot:help>
+      <template v-if="!readonly" v-slot:help>
         This text displays on detail and edit pages when users hover over the
         Info icon next to this field
       </template>
@@ -54,11 +58,12 @@
     <slds-input
       id="field-auto-number-display-text"
       v-model="fieldInput.displayFormat"
-      label="Auto Number Display Text"
+      label="Display Text"
       pattern=".{0,20}\{[0]{1,10}\}"
       :error="$v.fieldInput.displayFormat.$error"
+      :readonly="readonly"
     >
-      <template v-slot:help>
+      <template v-if="!readonly" v-slot:help>
         Example: A-{000000000}
       </template>
       <template
@@ -74,8 +79,9 @@
       v-model="fieldInput.startingNumber"
       label="Starting Number"
       type="number"
-      required
       :error="$v.fieldInput.startingNumber.$error"
+      :required="!readonly"
+      :readonly="readonly"
     >
       <template v-slot:error>
         <p v-if="!$v.fieldInput.startingNumber.required">
@@ -91,11 +97,13 @@
       v-model="fieldInput.generateAutoNumbers"
       label="Generate Auto Number for existing records"
       class="mt-2"
+      :readonly="readonly"
     ></slds-checkbox>
     <slds-checkbox
       id="field-external-id"
       v-model="fieldInput.externalId"
       label="External Id"
+      :readonly="readonly"
     ></slds-checkbox>
   </div>
 </template>
@@ -119,19 +127,51 @@ const displayFormatValidation = helpers.regex(
 )
 
 export default {
-  model: {
-    prop: 'field',
-  },
   props: {
     field: {
       type: Object,
-      default: () => {},
+      default: () => {
+        return {
+          label: undefined,
+          name: undefined,
+          description: undefined,
+          helpText: undefined,
+          displayFormat: undefined,
+          startingNumber: undefined,
+          generateAutoNumbers: undefined,
+          externalId: false,
+        }
+      },
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
     return {
-      fieldInput: this.field,
+      fieldInput: {
+        label: this.field.label || undefined,
+        name: this.field.name || undefined,
+        description: this.field.description || undefined,
+        helpText: this.field.helpText || undefined,
+        displayFormat: this.field.displayFormat || undefined,
+        startingNumber: this.field.startingNumber || undefined,
+        generateAutoNumbers: this.field.generateAutoNumbers || undefined,
+        externalId: this.field.externalId || false,
+      },
     }
+  },
+  watch: {
+    field(newValue) {
+      this.fieldInput = newValue
+    },
+    fieldInput: {
+      deep: true,
+      handler() {
+        this.$emit('fieldchange', this.fieldInput)
+      },
+    },
   },
   validations: {
     fieldInput: {

@@ -2,8 +2,8 @@
   <form
     id="sobject-form"
     ref="sobject-form"
-    class="d-flex flex-column slds-form px-3"
-    style="max-height: none; height: calc(100vh - 120px); overflow-y: auto;"
+    class="d-flex flex-column slds-form px-2"
+    style="max-height: none; height: calc(100vh - 90px); overflow-y: auto;"
   >
     <slds-input
       id="sobject-label"
@@ -225,7 +225,7 @@
     />
     <slds-button
       class="mt-3"
-      label="Create Object"
+      :label="value.name ? 'Update' : 'Create'"
       brand
       stretch
       @click="onSubmit"
@@ -252,28 +252,57 @@ const displayFormatValidation = helpers.regex(
 )
 
 export default {
+  props: {
+    value: {
+      type: Object,
+      required: true,
+      default: () => {
+        return {
+          name: undefined,
+          label: undefined,
+          objectName: undefined,
+          description: undefined,
+          pluralLabel: undefined,
+          gender: undefined,
+          recordName: undefined,
+          dataType: 'Text',
+          displayFormat: undefined,
+          startingNumber: undefined,
+          enableReports: false,
+          enableActivities: false,
+          enableHistory: false,
+          allowInChatterGroups: false,
+          enableSharing: false,
+          enableBulkApi: false,
+          enableStreamingApi: false,
+          enableSearch: false,
+          deploymentStatus: 'Deployed',
+        }
+      },
+    },
+  },
   data() {
     return {
       sobject: {
-        name: undefined,
-        label: undefined,
-        objectName: undefined,
-        description: undefined,
-        pluralLabel: undefined,
-        gender: undefined,
-        recordName: undefined,
-        dataType: 'Text',
-        displayFormat: undefined,
-        startingNumber: undefined,
-        enableReports: false,
-        enableActivities: false,
-        enableHistory: false,
-        allowInChatterGroups: false,
-        enableSharing: false,
-        enableBulkApi: false,
-        enableStreamingApi: false,
-        enableSearch: false,
-        deploymentStatus: 'Deployed',
+        name: this.value.name || undefined,
+        label: this.value.label || undefined,
+        objectName: this.value.objectName || undefined,
+        description: this.value.description || undefined,
+        pluralLabel: this.value.pluralLabel || undefined,
+        gender: this.value.gender || undefined,
+        recordName: this.value.recordName || undefined,
+        dataType: this.value.dataType || 'Text',
+        displayFormat: this.value.displayFormat || undefined,
+        startingNumber: this.value.startingNumber || undefined,
+        enableReports: this.value.enableReports || false,
+        enableActivities: this.value.enableActivities || false,
+        enableHistory: this.value.enableHistory || false,
+        allowInChatterGroups: this.value.allowInChatterGroups || false,
+        enableSharing: this.value.enableSharing || false,
+        enableBulkApi: this.value.enableBulkApi || false,
+        enableStreamingApi: this.value.enableStreamingApi || false,
+        enableSearch: this.value.enableSearch || false,
+        deploymentStatus: this.value.deploymentStatus || 'Deployed',
       },
       objectName: undefined,
       languages: ['es', 'pt_BR', 'es_MX'],
@@ -375,16 +404,13 @@ export default {
         this.languages.includes(this.orgLanguageLocaleKey)
       )
     },
+    isUpdating() {
+      return this.value.name
+    },
   },
   watch: {
     'sobject.label'(newValue) {
-      this.objectName = this.sobject.label
-        ? this.sobject.label.replace(/\s/g, '_')
-        : ''
       this.sobject.name = this.sobject.label
-      this.sobject.recordName = this.sobject.label
-        ? this.sobject.label + ' Name'
-        : ''
     },
     'sobject.enableSharing'(newValue) {
       this.sobject.enableBulkApi = newValue
@@ -402,7 +428,6 @@ export default {
       this.sobject.gender = newValue === false ? undefined : 'Feminine'
     },
     objectName(newValue) {
-      this.objectName = newValue.replace(/\s/g, '_')
       this.sobject.objectName = newValue.replace(/\s/g, '_')
     },
   },
@@ -412,7 +437,10 @@ export default {
       if (this.$v.$invalid) {
         console.log('ERROR')
       } else {
-        this.$emit('sobject', this.sobject)
+        this.$emit(
+          this.isUpdating ? 'updatesobject' : 'newsobject',
+          this.sobject
+        )
       }
     },
   },
