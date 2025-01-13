@@ -18,3 +18,12 @@ $ npm run generate
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+
+## Demo
+
+> [!IMPORTANT]
+> the demo is broken in Brave. It works fine in Firefox and Safari.
+
+https://elastic-kare-6bcddf.netlify.app/builder/
+
